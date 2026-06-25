@@ -98,9 +98,84 @@
             0% { transform: translateY(-10vh) rotate(0deg); }
             100% { transform: translateY(110vh) rotate(360deg); }
         }
+
+        @keyframes fireball {
+            0% { transform: scale(0) translateX(0); opacity: 1; }
+            100% { transform: scale(3) translateX(-50px); opacity: 0; }
+        }
+        .animate-fireball::after {
+            content: '\f06d'; /* fa-fire */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            color: #ff2a00;
+            font-size: 2rem;
+            animation: fireball 1s ease-out forwards;
+        }
+
+        @keyframes shield-expand {
+            0% { transform: scale(0); opacity: 0.8; border-width: 10px; }
+            100% { transform: scale(4); opacity: 0; border-width: 1px; }
+        }
+        .animate-shield::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: solid #3b82f6;
+            animation: shield-expand 1.5s ease-out forwards;
+        }
+
+        @keyframes sage-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .animate-sage {
+            animation: sage-pulse 2s infinite;
+            border-color: #10b981 !important;
+            background-color: #064e3b !important;
+        }
+
+        @keyframes smoke-puff {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+        .clone-smoke {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #94a3b8;
+            animation: smoke-puff 0.8s ease-out forwards;
+        }
+
+        @keyframes wood-grow {
+            0% { width: 0; opacity: 0; }
+            100% { width: 100px; opacity: 1; }
+        }
+        .wood-branch {
+            position: absolute;
+            height: 8px;
+            background: #78350f;
+            border-radius: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: -1;
+            animation: wood-grow 1.5s ease-out forwards;
+        }
+
+        /* Winding Scroll UI */
+        #master-scroll {
+            transition: transform 0.1s linear;
+        }
     </style>
 </head>
 <body class="antialiased relative">
+
+    <div class="fixed top-24 right-4 md:right-8 z-50 flex flex-col items-center drop-shadow-[0_0_10px_rgba(255,123,0,0.8)] pointer-events-none transition-opacity duration-300 opacity-80 hover:opacity-100">
+        <i id="master-scroll" class="fa-solid fa-scroll text-5xl text-naranja"></i>
+        <span class="text-[10px] font-ninja text-naranja mt-2 bg-slate-900/90 px-2 py-1 rounded border border-naranja/30 shadow-lg tracking-widest uppercase">Winding Scroll</span>
+    </div>
 
     <!-- Hero Section -->
     <header class="relative w-full min-h-[60vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden border-b-4 border-naranja bg-slate-900">
@@ -128,7 +203,11 @@
         
         <!-- Dynamic Timeline Lines -->
         <div class="timeline-track"></div>
-        <div class="timeline-fill" id="timeline-fill"></div>
+        <div class="timeline-fill" id="timeline-fill">
+            <div id="naruto-avatar" class="absolute bottom-[-15px] left-1/2 transform -translate-x-1/2 text-2xl text-naranja drop-shadow-[0_0_12px_rgba(255,123,0,1)] z-30 transition-transform duration-200">
+                <i class="fa-solid fa-user-ninja"></i>
+            </div>
+        </div>
 
         <!-- ARC 1 HEADER -->
         <div class="relative z-10 text-center mb-16 jutsu-card scroll-item">
@@ -155,7 +234,7 @@
         </div>
 
         <!-- Event 2: CDAC -->
-        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-12 items-center justify-between scroll-item">
+        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-12 items-center justify-between scroll-item" data-jutsu="fireball">
             <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
                 <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">The First S-Rank Jutsu</h3>
                 <span class="text-sm text-gray-500 font-bold tracking-wider">CDAC SEMINAR BREAKTHROUGH</span>
@@ -170,7 +249,7 @@
         </div>
 
         <!-- Event 3: ECIL -->
-        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between scroll-item">
+        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between scroll-item" data-jutsu="shield">
             <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
                 <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">Mastering Defensive Ninjutsu</h3>
                 <span class="text-sm text-gray-500 font-bold tracking-wider">ECIL APPRENTICESHIP</span>
@@ -239,7 +318,7 @@
         </div>
 
         <!-- Event 7: Synchrony JSOC -->
-        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between scroll-item">
+        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between scroll-item" data-jutsu="sage">
             <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
                 <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">Unlocking Sage Mode</h3>
                 <span class="text-sm text-gray-500 font-bold tracking-wider">SYNCHRONY JSOC (MAY 2018)</span>
@@ -269,7 +348,7 @@
         </div>
 
         <!-- Event 9: Automation -->
-        <div class="relative z-10 flex flex-col md:flex-row w-full mb-16 items-center justify-between scroll-item">
+        <div class="relative z-10 flex flex-col md:flex-row w-full mb-16 items-center justify-between scroll-item" data-jutsu="clones">
             <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
                 <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">The Shadow Clone Jutsu</h3>
                 <span class="text-sm text-gray-500 font-bold tracking-wider">AUTOMATION & PLAYBOOKS</span>
@@ -284,7 +363,7 @@
         </div>
 
         <!-- Event 10 - The Climax -->
-        <div class="relative z-10 flex w-full mb-10 justify-center jutsu-card mt-10 scroll-item">
+        <div class="relative z-10 flex w-full mb-10 justify-center jutsu-card mt-10 scroll-item" data-jutsu="wood">
             <div class="md:w-8/12 w-[calc(100%-20px)] bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-naranja p-8 rounded-xl relative overflow-hidden group shadow-[0_0_30px_rgba(255,123,0,0.4)] text-center ml-[24px] md:ml-0">
                 <!-- Decorative Top Scroll Elements -->
                 <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-naranja to-kyubi"></div>
@@ -361,9 +440,76 @@
                     if (entry.isIntersecting) {
                         // Unwind when scrolling down
                         entry.target.classList.add('scrolled-in');
+                        
+                        const jutsuType = entry.target.getAttribute('data-jutsu');
+                        const iconContainer = entry.target.querySelector('.absolute.rounded-full');
+                        
+                        if (jutsuType && iconContainer && !iconContainer.classList.contains('jutsu-casted')) {
+                            iconContainer.classList.add('jutsu-casted'); // Prevent re-casting on every minor scroll bounce
+                            
+                            if (jutsuType === 'fireball') {
+                                iconContainer.classList.add('animate-fireball');
+                            } else if (jutsuType === 'shield') {
+                                iconContainer.classList.add('animate-shield');
+                            } else if (jutsuType === 'sage') {
+                                iconContainer.classList.add('animate-sage');
+                                entry.target.querySelector('i').classList.replace('text-white', 'text-green-400');
+                            } else if (jutsuType === 'clones') {
+                                // Add smoke puffs and clone icons
+                                for(let i=0; i<3; i++) {
+                                    const smoke = document.createElement('i');
+                                    smoke.className = 'fa-solid fa-cloud clone-smoke';
+                                    smoke.style.left = (Math.random() * 60 - 30) + 'px';
+                                    smoke.style.top = (Math.random() * 60 - 30) + 'px';
+                                    iconContainer.appendChild(smoke);
+                                    
+                                    setTimeout(() => {
+                                        const clone = document.createElement('i');
+                                        clone.className = 'fa-solid fa-robot text-naranja absolute';
+                                        clone.style.left = (Math.random() * 80 - 40) + 'px';
+                                        clone.style.top = (Math.random() * 80 - 40) + 'px';
+                                        clone.style.opacity = '0.6';
+                                        clone.style.fontSize = '0.8rem';
+                                        iconContainer.appendChild(clone);
+                                    }, 400);
+                                }
+                            } else if (jutsuType === 'wood') {
+                                const card = entry.target.querySelector('.bg-gradient-to-br');
+                                // Spawn wood branches
+                                for(let i=0; i<6; i++) {
+                                    const branch = document.createElement('div');
+                                    branch.className = 'wood-branch';
+                                    branch.style.top = (20 + (i * 15)) + '%';
+                                    if(i % 2 === 0) {
+                                        branch.style.left = '-50px';
+                                        branch.style.transformOrigin = 'left center';
+                                    } else {
+                                        branch.style.right = '-50px';
+                                        branch.style.transformOrigin = 'right center';
+                                        branch.style.transform = 'translateY(-50%) rotate(180deg)';
+                                    }
+                                    card.appendChild(branch);
+                                }
+                            }
+                        }
                     } else {
                         // Wind up when scrolling up/out of view
                         entry.target.classList.remove('scrolled-in');
+                        
+                        const iconContainer = entry.target.querySelector('.absolute.rounded-full');
+                        if(iconContainer && entry.boundingClientRect.top > 0) {
+                            iconContainer.classList.remove('jutsu-casted', 'animate-fireball', 'animate-shield', 'animate-sage');
+                            if (entry.target.getAttribute('data-jutsu') === 'sage') {
+                                entry.target.querySelector('i').classList.replace('text-green-400', 'text-white');
+                            }
+                            const clones = iconContainer.querySelectorAll('.fa-robot.absolute, .clone-smoke');
+                            clones.forEach(c => c.remove());
+                            const card = entry.target.querySelector('.bg-gradient-to-br');
+                            if(card) {
+                                const branches = card.querySelectorAll('.wood-branch');
+                                branches.forEach(b => b.remove());
+                            }
+                        }
                     }
                 });
             }, observerOptions);
@@ -373,6 +519,9 @@
 
             const timelineFill = document.getElementById('timeline-fill');
             const mainSection = document.getElementById('journey');
+            const masterScroll = document.getElementById('master-scroll');
+            const narutoAvatar = document.getElementById('naruto-avatar');
+            let lastScrollTop = 0;
 
             window.addEventListener('scroll', () => {
                 const rect = mainSection.getBoundingClientRect();
@@ -390,6 +539,21 @@
                 progressPercentage = Math.max(0, Math.min(100, progressPercentage));
                 
                 timelineFill.style.height = `${progressPercentage}%`;
+                
+                const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Rotate the main scroll icon at the top right
+                masterScroll.style.transform = `rotate(${currentScrollTop * 0.15}deg)`;
+                
+                // Make Naruto flip directions if scrolling up vs down on the timeline
+                if (currentScrollTop > lastScrollTop) {
+                    // Scrolling Down (Diving into the scroll)
+                    narutoAvatar.style.transform = 'translateX(-50%) rotate(180deg)';
+                } else {
+                    // Scrolling Up (Retreating)
+                    narutoAvatar.style.transform = 'translateX(-50%) rotate(0deg)';
+                }
+                lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
             });
         });
     </script>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Shinobi Way - Cyber Security Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Shojumaru&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --naranja: #ff7b00;
+            --kyubi: #ff2a00;
+            --bg-dark: #0f172a;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+        .font-ninja {
+            font-family: 'Shojumaru', system-ui;
+        }
+        .text-naranja { color: var(--naranja); }
+        .text-kyubi { color: var(--kyubi); }
+        .bg-naranja { background-color: var(--naranja); }
+        
+        .kyubi-glow {
+            text-shadow: 0 0 10px rgba(255, 42, 0, 0.8), 0 0 20px rgba(255, 42, 0, 0.4);
+        }
+        
+        /* Timeline line */
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: linear-gradient(to bottom, #ff7b00, #ff2a00, #475569);
+            transform: translateX(-50%);
+            border-radius: 4px;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-line::before {
+                left: 24px;
+            }
+        }
+
+        .jutsu-card {
+            transition: all 0.3s ease;
+        }
+        .jutsu-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 0 25px rgba(255, 123, 0, 0.3);
+        }
+
+        /* Leaf falling animation for hero */
+        .leaf {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #ff7b00;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            opacity: 0.3;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <!-- Hero Section -->
+    <header class="relative w-full min-h-[60vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden border-b-4 border-naranja bg-slate-900">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
+        
+        <div class="relative z-10">
+            <i class="fa-solid fa-fire text-6xl text-naranja mb-6 drop-shadow-[0_0_15px_rgba(255,123,0,1)]"></i>
+            <h1 class="font-ninja text-5xl md:text-7xl text-naranja mb-4 tracking-wider drop-shadow-lg">
+                MY SHINOBI WAY
+            </h1>
+            <h2 class="text-2xl md:text-3xl text-gray-300 font-light mb-8 max-w-2xl mx-auto">
+                A Cyber Security Journey from Academy Student to <span class="text-naranja font-bold">AVP (Legendary Sannin)</span>
+            </h2>
+            <p class="text-gray-400 max-w-xl mx-auto text-lg mb-10 italic">
+                "I'm not gonna run away, I never go back on my word! That's my nindo: my ninja way!"
+            </p>
+            <a href="#journey" class="px-8 py-3 bg-gradient-to-r from-naranja to-kyubi text-white font-bold rounded-full uppercase tracking-widest hover:shadow-[0_0_20px_rgba(255,123,0,0.6)] transition-all">
+                Unroll the Scroll
+            </a>
+        </div>
+    </header>
+
+    <!-- Timeline Section -->
+    <main id="journey" class="container mx-auto px-4 py-16 relative timeline-line max-w-6xl">
+        
+        <!-- ARC 1 HEADER -->
+        <div class="relative z-10 text-center mb-16 jutsu-card">
+            <span class="bg-orange-900 text-orange-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-naranja shadow-[0_0_10px_rgba(255,123,0,0.5)]">
+                Part I: The Genin Trials
+            </span>
+            <h2 class="font-ninja text-3xl md:text-4xl text-naranja mt-4 drop-shadow-md">Ages 20 - 25</h2>
+            <p class="text-gray-400 mt-2">The Academy days, early rejections, and forging the first squad.</p>
+        </div>
+
+        <!-- Event 1: Academy -->
+        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
+                <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">The Academy Trials</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">MCA AT AURORA'S P.G. COLLEGE</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    Enrolling in the MCA program was my entry into the Ninja Academy. Like many Genin aiming for greatness, my early attempts to secure missions (internships) were met with silence and rejection. Yet, the Will of Fire was kindled, and my resolve remained unshaken.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-naranja shadow-[0_0_10px_rgba(255,123,0,0.8)]">
+                <i class="fa-solid fa-graduation-cap text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
+        </div>
+
+        <!-- Event 2: CDAC -->
+        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-12 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
+                <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">The First S-Rank Jutsu</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">CDAC SEMINAR BREAKTHROUGH</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    A pivotal Cyber Security seminar became my Chunin Exams. Encouraged by my mentor, Professor Ismail Mohammed, I demonstrated a custom jutsu—a credential-harvesting script targeting Facebook. This display of offensive chakra caught the eye of a CDAC Jonin, landing me my first mission: engineering a secure website fortified with strict defense policies.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-naranja shadow-[0_0_10px_rgba(255,123,0,0.8)]">
+                <i class="fa-solid fa-code text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pr-8"></div>
+        </div>
+
+        <!-- Event 3: ECIL -->
+        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
+                <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">Mastering Defensive Ninjutsu</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">ECIL APPRENTICESHIP</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    Despite the CDAC success, the path remained harsh. After relentless persistence, I secured an apprenticeship at ECIL. Here, I pivoted entirely to defensive ninjutsu. I dedicated myself to fortifying the village, instrumental in deploying their internal SIEM platform. My strategic case studies laid the groundwork for their future defense matrix.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-naranja shadow-[0_0_10px_rgba(255,123,0,0.8)]">
+                <i class="fa-solid fa-shield-halved text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
+        </div>
+
+        <!-- Event 4: DRDO -->
+        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-16 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
+                <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">The Three-Man Squad</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">DRDO INTERNSHIP</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    Word of my skills reached the elite defense organization, DRDO, who required specialized shinobi for web and network security. Embracing leadership, I formed a classic three-man Genin squad with two trusted academy peers—one shinobi and one kunoichi. We faced a grueling gauntlet of interviews, ultimately securing a 6-month mission that forged our skills and culminated in my successful academy graduation.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-naranja shadow-[0_0_10px_rgba(255,123,0,0.8)]">
+                <i class="fa-solid fa-users text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pr-8"></div>
+        </div>
+
+        <!-- ARC 2 HEADER -->
+        <div class="relative z-10 text-center mb-16 pt-10 jutsu-card">
+            <span class="bg-red-900 text-red-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]">
+                Part II: Shippuden - The Kage Era
+            </span>
+            <h2 class="font-ninja text-3xl md:text-4xl text-kyubi mt-4 kyubi-glow">Ages 25 - 30+</h2>
+            <p class="text-gray-400 mt-2">Entering the corporate battlefield, unlocking Sage Mode, and earning the title of Sannin.</p>
+        </div>
+
+        <!-- Event 5: Null Chapter -->
+        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
+                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">The Wandering Ronin</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">NULL HYDERABAD CHAPTER</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    Graduation brought a harsh winter. Facing continuous rejections in the job market, I wandered like a ronin, but my Will of Fire burned bright. I sought out the Null Hyderabad Chapter—a hidden village of elite security practitioners. This alliance expanded my network, honed my skills, and unlocked a vital recommendation for my first true corporate battlefront.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
+                <i class="fa-solid fa-network-wired text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
+        </div>
+
+        <!-- Event 6: Anthelio -->
+        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-12 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
+                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">Entering the Battlefield</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">ANTHELIO SOLUTIONS (JUL 2016)</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    Joining Anthelio as an Information Security Associate, I was thrust onto the frontlines. Through sheer grit and tactical acumen, I advanced to Security Assistant. Tasked with first-level Incident Response, I relentlessly refined our defensive maneuvers, proving my worth and earning a swift promotion to a dedicated Incident Response Shinobi.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
+                <i class="fa-solid fa-khanda text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pr-8"></div>
+        </div>
+
+        <!-- Event 7: Synchrony JSOC -->
+        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
+                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">Unlocking Sage Mode</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">SYNCHRONY JSOC (MAY 2018)</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    Seeking stronger adversaries, I joined Synchrony's JSOC. As an Analyst, I realized that to truly master the battlefield, one must dictate the rules of engagement. Demonstrating my knack for security engineering, I was drafted into the elite Security Engineering division within six months, weaving complex Python scripts to forge advanced security content.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
+                <i class="fa-brands fa-python text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
+        </div>
+
+        <!-- Event 8: Engineering & SOAR -->
+        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-12 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
+                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">The Ultimate Defense</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">DEEP PACKET INSPECTION & CORTEX XSOAR</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    For eight grueling months, I perfected my sensory jutsu—developing Intrusion Detection rules, SIEM correlations, and CEF parsers for deep packet inspection. Recognizing the need for automated defense, I led the validation and deployment of the Palo Alto Cortex XSOAR platform, successfully launching it into our village's arsenal in May 2019.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
+                <i class="fa-solid fa-eye text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pr-8"></div>
+        </div>
+
+        <!-- Event 9: Automation -->
+        <div class="relative z-10 flex flex-col md:flex-row w-full mb-16 items-center justify-between">
+            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
+                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">The Shadow Clone Jutsu</h3>
+                <span class="text-sm text-gray-500 font-bold tracking-wider">AUTOMATION & PLAYBOOKS</span>
+                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
+                    Mastering the XSOAR platform, I developed highly complex playbooks. By engineering auto-containment, rapid remediation, and compliance enforcement scripts, I effectively cloned our team's efforts. This masterstroke reduced the JSOC's manual workload by a staggering 35%—a true Shadow Clone Jutsu for enterprise security operations.
+                </p>
+            </div>
+            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
+                <i class="fa-solid fa-robot text-white text-sm"></i>
+            </div>
+            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
+        </div>
+
+        <!-- Event 10 - The Climax -->
+        <div class="relative z-10 flex w-full mb-10 justify-center jutsu-card mt-10">
+            <div class="md:w-8/12 w-[calc(100%-20px)] bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-naranja p-8 rounded-xl relative overflow-hidden group shadow-[0_0_30px_rgba(255,123,0,0.4)] text-center ml-[24px] md:ml-0">
+                <!-- Decorative Top Scroll Elements -->
+                <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-naranja to-kyubi"></div>
+                
+                <h2 class="font-ninja text-3xl md:text-5xl text-naranja mb-2 mt-2 drop-shadow-[0_0_8px_rgba(255,123,0,0.8)]">
+                    Wood Style: True Thousand Hands
+                </h2>
+                <h3 class="text-xl text-white font-bold mb-6 tracking-widest uppercase">
+                    Rank Achieved: Assistant Vice President (Legendary Sannin)
+                </h3>
+                
+                <p class="text-gray-300 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
+                    Over the years, promoting every ~2 years, my leadership chakra grew. I was given the opportunity to build my own Anbu squad. Today, I operate as a <strong>Sannin</strong>, an Assistant Vice President handling both the technical frontlines and managerial strategies, leading a specialized elite team of <strong>7 FTEs</strong>. 
+                </p>
+
+                <!-- Future Goal Section -->
+                <div class="mt-8 pt-6 border-t border-slate-700/50">
+                    <h4 class="font-ninja text-2xl text-kyubi mb-2 kyubi-glow">The Next Transformation</h4>
+                    <p class="text-gray-400 text-md max-w-xl mx-auto">
+                        My journey doesn't end here. With the village secured and my squad trained, my eyes are set on the highest seat in the village: becoming the <strong>Hokage (Director of Information Security)</strong>.
+                    </p>
+                </div>
+
+                <p class="text-naranja font-bold text-xl italic font-ninja mt-6">
+                    "This is my Ninja Way."
+                </p>
+
+                <!-- 7 Man Squad Icons -->
+                <div class="flex justify-center items-center space-x-2 mt-6">
+                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
+                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
+                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
+                    <i class="fa-solid fa-dragon text-naranja text-3xl mx-2 shadow-naranja drop-shadow-[0_0_5px_rgba(255,123,0,1)] hover:scale-125 transition-transform cursor-pointer" title="The Sannin"></i>
+                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
+                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
+                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
+                </div>
+            </div>
+            
+            <div class="absolute top-[-20px] left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-14 h-14 rounded-full bg-slate-900 border-4 border-naranja shadow-[0_0_20px_rgba(255,123,0,1)] z-20">
+                <i class="fa-solid fa-scroll text-naranja text-xl"></i>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Script for subtle leaf animation -->
+    <script>
+        function createLeaf() {
+            const leaf = document.createElement('div');
+            leaf.classList.add('leaf');
+            leaf.style.left = Math.random() * 100 + 'vw';
+            leaf.style.animationDuration = Math.random() * 3 + 2 + 's';
+            leaf.style.opacity = Math.random() * 0.5 + 0.1;
+            document.body.appendChild(leaf);
+
+            setTimeout(() => {
+                leaf.remove();
+            }, 5000);
+        }
+
+        setInterval(createLeaf, 300);
+    </script>
+</body>
+</html>

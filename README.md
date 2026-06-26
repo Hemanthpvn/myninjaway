@@ -1,2 +1,2 @@
 # myninjaway
-My career journey in Naruto way
+My life and career journey in Naruto way

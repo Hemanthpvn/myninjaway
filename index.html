@@ -30,8 +30,8 @@
         
         .font-ninja { font-family: 'Shojumaru', system-ui; }
         
-        /* Intro Screen */
-        #intro-screen {
+        /* Intro & Exit Screens */
+        #intro-screen, #exit-screen {
             position: fixed;
             inset: 0;
             background: #0c0a09;
@@ -42,7 +42,12 @@
             justify-content: center;
             transition: opacity 1s ease-in-out;
         }
-        #intro-video {
+        #exit-screen {
+            z-index: 100;
+            display: none;
+            opacity: 0;
+        }
+        .story-video {
             max-width: 90vw;
             max-height: 70vh;
             border: 2px solid var(--accent);
@@ -61,6 +66,7 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s;
+            margin: 0.5rem;
         }
         .skip-btn:hover {
             background: var(--accent);
@@ -75,12 +81,13 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            perspective: 1500px; /* For 3D page turns */
+            perspective: 1500px;
+            transition: opacity 0.8s ease-in-out;
         }
         
         .manga-book {
             width: 95vw;
-            max-width: 900px; /* Slimmer, more readable book width */
+            max-width: 900px;
             height: 85vh;
             background-color: var(--paper);
             color: var(--ink);
@@ -88,7 +95,6 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            /* Subtle paper texture */
             background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.04"/></svg>');
             border-right: 3px solid #d6d3d1;
             border-radius: 2px 8px 8px 2px;
@@ -97,7 +103,7 @@
         .manga-content {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 3rem 4rem 3rem 5rem; /* Extra left padding for book binding */
+            padding: 3rem 4rem 3rem 5rem;
             display: flex;
             flex-direction: column;
             opacity: 1;
@@ -253,7 +259,6 @@
             height: 100%;
             background: var(--accent);
             width: 0%;
-            /* The transition duration will be handled via JS to ensure it resets cleanly */
         }
 
         /* Custom Ninja Auto-Turn Animation Elements */
@@ -271,16 +276,8 @@
             gap: -20px;
         }
 
-        /* The animation timeline:
-           Ninja dashes from Right to Left. 
-           Page flip occurs in sync with the ninja crossing the screen. 
-        */
-        .run-ninja-dash {
-            animation: ninja-dash 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-        .run-page-flip {
-            animation: page-flip 1.2s ease-in-out forwards;
-        }
+        .run-ninja-dash { animation: ninja-dash 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        .run-page-flip { animation: page-flip 1.2s ease-in-out forwards; }
 
         @keyframes ninja-dash {
             0% { transform: translateY(-50%) translateX(100vw) scaleX(-1); opacity: 0; }
@@ -295,7 +292,6 @@
             100% { transform: rotateY(0deg); opacity: 1; }
         }
 
-        /* Scrollbar */
         .manga-content::-webkit-scrollbar { width: 6px; }
         .manga-content::-webkit-scrollbar-track { background: transparent; }
         .manga-content::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
@@ -303,14 +299,19 @@
 </head>
 <body>
 
+    <!-- Intro Screen -->
     <div id="intro-screen">
-        <video id="intro-video" autoplay muted playsinline onended="startJourney()">
+        <video id="intro-video" class="story-video" playsinline onended="startJourney()">
             <source src="Take_the_above_story_My_Shino.mp4" type="video/mp4">
             Your browser does not support HTML video.
         </video>
-        <button class="skip-btn" onclick="startJourney()">Enter the Archives</button>
+        <div class="flex flex-wrap justify-center mt-4">
+            <button id="play-intro-btn" class="skip-btn" style="display: none;" onclick="forcePlayIntro()">Unseal Scroll (Play Audio)</button>
+            <button class="skip-btn" onclick="startJourney()">Skip to Archives</button>
+        </div>
     </div>
 
+    <!-- Manga Book Wrapper -->
     <div class="manga-wrapper" id="manga-wrapper">
         <div class="manga-book">
             <div class="manga-content" id="manga-content">
@@ -322,11 +323,8 @@
                     <i class="fa-solid fa-arrow-left"></i> Previous Chapter
                 </button>
                 <div id="page-indicator" class="font-ninja text-muted tracking-widest"></div>
-                
-                <!-- The Next button is explicitly removed as requested -->
-                <div style="width: 150px;"></div> <!-- Spacer to keep layout balanced -->
+                <div style="width: 150px;"></div> <!-- Spacer -->
 
-                <!-- 2-Minute Countdown Timer Bar -->
                 <div class="timer-track">
                     <div id="timer-fill" class="timer-fill"></div>
                 </div>
@@ -351,6 +349,18 @@
             </div>
             <p id="wisdom-modal-text" class="text-lg text-ink italic leading-relaxed font-medium"></p>
         </div>
+    </div>
+
+    <!-- Exit Screen -->
+    <div id="exit-screen">
+        <h2 class="font-ninja text-3xl md:text-5xl text-accent mb-6 tracking-widest text-center drop-shadow-[0_0_10px_rgba(153,27,27,0.8)]">
+            The Journey Continues...
+        </h2>
+        <video id="exit-video" class="story-video" playsinline onended="finishSaga()">
+            <source src="Take_the_above_story_My_Shino.mp4" type="video/mp4">
+            Your browser does not support HTML video.
+        </video>
+        <button class="skip-btn mt-4" onclick="finishSaga()">Conclude Record</button>
     </div>
 
     <script>
@@ -438,16 +448,54 @@
         let isAnimating = false;
         let journeyStarted = false;
         
-        // Timer Configuration (Reduced to 35 seconds)
-        const AUTO_TURN_MS = 35000; // 35 seconds (35,000 milliseconds)
+        // Timer Configuration (1 Minute)
+        const AUTO_TURN_MS = 5000; 
         let autoTurnTimeout;
+        let introPlayPromise;
+
+        // Initialize Intro Video Playback Safely
+        document.addEventListener("DOMContentLoaded", () => {
+            const introVid = document.getElementById('intro-video');
+            const playBtn = document.getElementById('play-intro-btn');
+            
+            // Attempt to autoplay with audio. If blocked by browser policy, show play button.
+            introPlayPromise = introVid.play();
+            if (introPlayPromise !== undefined) {
+                introPlayPromise.catch(error => {
+                    if (error.name !== 'AbortError') {
+                        playBtn.style.display = 'inline-block';
+                    }
+                });
+            }
+        });
+
+        function forcePlayIntro() {
+            const introVid = document.getElementById('intro-video');
+            introPlayPromise = introVid.play();
+            if (introPlayPromise !== undefined) {
+                introPlayPromise.catch(error => {
+                    // Ignore abort errors which occur if user skips instantly
+                });
+            }
+            document.getElementById('play-intro-btn').style.display = 'none';
+        }
 
         function startJourney() {
             if(journeyStarted) return;
             journeyStarted = true;
             
             const video = document.getElementById('intro-video');
-            video.pause();
+            
+            // Safely pause the video only after the play promise resolves
+            if (introPlayPromise !== undefined) {
+                introPlayPromise.then(() => {
+                    video.pause();
+                }).catch(() => {
+                    // Ignore, playback was blocked or aborted anyway
+                });
+            } else {
+                video.pause();
+            }
 
             const intro = document.getElementById('intro-screen');
             intro.style.opacity = '0';
@@ -479,9 +527,16 @@
                     ${data.content}
                 </div>
 
-                <button class="wisdom-trigger-btn" onclick="openWisdomModal()">
-                    <i class="fa-solid fa-scroll"></i> Read Sannin's Wisdom
-                </button>
+                <div class="flex items-center gap-4 mt-auto">
+                    <button class="wisdom-trigger-btn" onclick="openWisdomModal()">
+                        <i class="fa-solid fa-scroll"></i> Read Sannin's Wisdom
+                    </button>
+                    ${currentPage === chapters.length - 1 ? `
+                    <button class="wisdom-trigger-btn" style="border-color: var(--ink); color: var(--ink);" onclick="showExitVideo()">
+                        <i class="fa-solid fa-door-open"></i> Conclude Journey
+                    </button>
+                    ` : ''}
+                </div>
             `;
             
             contentDiv.innerHTML = html;
@@ -491,45 +546,69 @@
             document.getElementById('prev-btn').disabled = currentPage === 0;
         }
 
-        // --- Timer & Auto-Turn Logic ---
-        
         function startAutoTurnTimer() {
             clearTimeout(autoTurnTimeout);
+            const timerFill = document.getElementById('timer-fill');
             
-            // Only start the timer if we are not on the last page
+            timerFill.style.transition = 'none';
+            timerFill.style.width = '0%';
+            void timerFill.offsetWidth; // Force Reflow
+            
+            // If on the last page, the timer completes the journey instead of turning a page
             if (currentPage >= chapters.length - 1) {
-                document.getElementById('timer-fill').style.width = '100%';
-                document.getElementById('timer-fill').style.transition = 'none';
+                timerFill.style.transition = `width ${AUTO_TURN_MS}ms linear`;
+                timerFill.style.width = '100%';
+                autoTurnTimeout = setTimeout(() => {
+                    showExitVideo();
+                }, AUTO_TURN_MS);
                 return;
             }
 
-            // Reset CSS animation for the progress bar
-            const timerFill = document.getElementById('timer-fill');
-            timerFill.style.transition = 'none';
-            timerFill.style.width = '0%';
-            
-            // Force a browser reflow so the '0%' state applies instantly before animating
-            void timerFill.offsetWidth; 
-            
-            // Animate bar filling over 120 seconds
             timerFill.style.transition = `width ${AUTO_TURN_MS}ms linear`;
             timerFill.style.width = '100%';
-
-            // Schedule the page turn
             autoTurnTimeout = setTimeout(() => {
                 triggerAutoTurn();
             }, AUTO_TURN_MS);
         }
 
+        function showExitVideo() {
+            clearTimeout(autoTurnTimeout);
+            const manga = document.getElementById('manga-wrapper');
+            const exitScreen = document.getElementById('exit-screen');
+            const exitVideo = document.getElementById('exit-video');
+
+            manga.style.opacity = '0';
+            setTimeout(() => {
+                manga.style.display = 'none';
+                exitScreen.style.display = 'flex';
+                void exitScreen.offsetWidth; // Reflow
+                exitScreen.style.opacity = '1';
+                
+                // Safely handle the exit video playback
+                const exitPlayPromise = exitVideo.play();
+                if (exitPlayPromise !== undefined) {
+                    exitPlayPromise.catch(error => {
+                        console.warn("Exit video play interrupted/blocked:", error);
+                    });
+                }
+            }, 800);
+        }
+
+        function finishSaga() {
+            document.getElementById('exit-screen').innerHTML = `
+                <h1 class="font-ninja text-5xl text-accent drop-shadow-[0_0_10px_rgba(153,27,27,0.8)]">
+                    The End
+                </h1>
+                <p class="text-muted mt-4">Thank you for walking this shinobi path with me.</p>
+            `;
+        }
+
         // --- Wisdom Modal Logic ---
         function openWisdomModal() {
             const data = chapters[currentPage];
-            
-            // Note: Using innerText instead of innerHTML mitigates XSS if data were dynamic
             document.getElementById('wisdom-modal-text').innerText = `"${data.wisdom}"`;
             document.getElementById('wisdom-modal').classList.add('active');
             
-            // Pause the auto-turn timer visually by locking its current width
             clearTimeout(autoTurnTimeout);
             const timerFill = document.getElementById('timer-fill');
             const currentWidth = window.getComputedStyle(timerFill).width;
@@ -539,8 +618,6 @@
 
         function closeWisdomModal() {
             document.getElementById('wisdom-modal').classList.remove('active');
-            
-            // Restart the 1-minute timer from scratch when they close the modal
             startAutoTurnTimer();
         }
 
@@ -551,28 +628,24 @@
             const ninja = document.getElementById('ninja-animator');
             const content = document.getElementById('manga-content');
             
-            // Reset animation states
             ninja.classList.remove('run-ninja-dash');
             content.classList.remove('run-page-flip');
             void ninja.offsetWidth;
             void content.offsetWidth;
             
-            // Trigger animations
             ninja.classList.add('run-ninja-dash');
             content.classList.add('run-page-flip');
 
-            // Wait for half the flip animation (when opacity is 0) to swap the content
             setTimeout(() => {
                 currentPage++;
                 renderPage();
             }, 600); 
 
-            // Cleanup classes when animation finishes
             setTimeout(() => {
                 ninja.classList.remove('run-ninja-dash');
                 content.classList.remove('run-page-flip');
                 isAnimating = false;
-                startAutoTurnTimer(); // Restart timer for the next page
+                startAutoTurnTimer(); 
             }, 1200); 
         }
 
@@ -593,7 +666,7 @@
             setTimeout(() => {
                 content.classList.remove('run-page-flip');
                 isAnimating = false;
-                startAutoTurnTimer(); // Restart the 2 min timer since user interacted
+                startAutoTurnTimer(); 
             }, 1200);
         }
 

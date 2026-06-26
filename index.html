@@ -1,561 +1,602 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Shinobi Way - Career Journey</title>
+    <title>My Shinobi Way - The Sannin's Journey</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Shojumaru&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --naranja: #ff7b00;
-            --kyubi: #ff2a00;
-            --bg-dark: #0f172a;
+            --paper: #f4f1ea;      /* Elegant parchment */
+            --ink: #1c1917;        /* Deep charcoal/ink */
+            --accent: #991b1b;     /* Crimson red stamp */
+            --muted: #a8a29e;
         }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: #e2e8f0;
-            overflow-x: hidden;
-        }
-        .font-ninja {
-            font-family: 'Shojumaru', system-ui;
-        }
-        .text-naranja { color: var(--naranja); }
-        .text-kyubi { color: var(--kyubi); }
-        .bg-naranja { background-color: var(--naranja); }
-        
-        .kyubi-glow {
-            text-shadow: 0 0 10px rgba(255, 42, 0, 0.8), 0 0 20px rgba(255, 42, 0, 0.4);
+            background-color: #0c0a09;
+            color: var(--ink);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at center, #292524 0%, #0c0a09 100%);
+            overflow: hidden; 
         }
         
-        /* Timeline line */
-        .timeline-track {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 4px;
-            background-color: #334155;
-            transform: translateX(-50%);
-            border-radius: 4px;
-            z-index: 0;
+        .font-ninja { font-family: 'Shojumaru', system-ui; }
+        
+        /* Intro Screen */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            background: #0c0a09;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-in-out;
         }
-        .timeline-fill {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 4px;
-            background: linear-gradient(to bottom, #ff7b00, #ff2a00);
-            box-shadow: 0 0 15px rgba(255, 42, 0, 0.8);
-            transform: translateX(-50%);
-            border-radius: 4px;
-            z-index: 1;
-            height: 0%; /* Dynamic height controlled by JS */
-            transition: height 0.1s ease-out;
+        #intro-video {
+            max-width: 90vw;
+            max-height: 70vh;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px rgba(153, 27, 27, 0.3);
+            margin-bottom: 2rem;
+            object-fit: contain;
         }
-
-        @media (max-width: 768px) {
-            .timeline-track, .timeline-fill {
-                left: 24px;
-            }
+        .skip-btn {
+            background: transparent;
+            color: var(--paper);
+            padding: 0.75rem 2rem;
+            border: 1px solid var(--muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-
-        /* Scroll Unwinding Animation Classes */
-        .scroll-item {
-            opacity: 0;
-            transform: perspective(1000px) rotateX(60deg) translateY(50px);
-            transform-origin: top center;
-            transition: opacity 0.5s ease-out, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
-            will-change: opacity, transform;
-        }
-        .scroll-item.scrolled-in {
-            opacity: 1;
-            transform: perspective(1000px) rotateX(0deg) translateY(0);
+        .skip-btn:hover {
+            background: var(--accent);
+            border-color: var(--accent);
         }
 
-        .jutsu-card {
-            transition: all 0.3s ease;
-        }
-        .jutsu-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 0 25px rgba(255, 123, 0, 0.3);
-        }
-
-        /* Leaf falling animation for hero */
-        .leaf {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: #ff7b00;
-            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-            opacity: 0.3;
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            0% { transform: translateY(-10vh) rotate(0deg); }
-            100% { transform: translateY(110vh) rotate(360deg); }
-        }
-
-        @keyframes fireball {
-            0% { transform: scale(0) translateX(0); opacity: 1; }
-            100% { transform: scale(3) translateX(-50px); opacity: 0; }
-        }
-        .animate-fireball::after {
-            content: '\f06d'; /* fa-fire */
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            color: #ff2a00;
-            font-size: 2rem;
-            animation: fireball 1s ease-out forwards;
-        }
-
-        @keyframes shield-expand {
-            0% { transform: scale(0); opacity: 0.8; border-width: 10px; }
-            100% { transform: scale(4); opacity: 0; border-width: 1px; }
-        }
-        .animate-shield::before {
-            content: '';
-            position: absolute;
+        /* Manga Book Layout */
+        .manga-wrapper {
+            display: none; 
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            border: solid #3b82f6;
-            animation: shield-expand 1.5s ease-out forwards;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            perspective: 1500px; /* For 3D page turns */
+        }
+        
+        .manga-book {
+            width: 95vw;
+            max-width: 900px; /* Slimmer, more readable book width */
+            height: 85vh;
+            background-color: var(--paper);
+            color: var(--ink);
+            box-shadow: -15px 0 35px rgba(0,0,0,0.9), inset 20px 0 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            /* Subtle paper texture */
+            background-image: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.04"/></svg>');
+            border-right: 3px solid #d6d3d1;
+            border-radius: 2px 8px 8px 2px;
         }
 
-        @keyframes sage-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
-        }
-        .animate-sage {
-            animation: sage-pulse 2s infinite;
-            border-color: #10b981 !important;
-            background-color: #064e3b !important;
-        }
-
-        @keyframes smoke-puff {
-            0% { transform: scale(0.5); opacity: 1; }
-            100% { transform: scale(2.5); opacity: 0; }
-        }
-        .clone-smoke {
-            position: absolute;
-            font-size: 1.5rem;
-            color: #94a3b8;
-            animation: smoke-puff 0.8s ease-out forwards;
+        .manga-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 3rem 4rem 3rem 5rem; /* Extra left padding for book binding */
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+            transform-origin: left center;
         }
 
-        @keyframes wood-grow {
-            0% { width: 0; opacity: 0; }
-            100% { width: 100px; opacity: 1; }
+        /* Sophisticated Design Elements */
+        .chapter-header {
+            border-bottom: 1px solid var(--muted);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
         }
-        .wood-branch {
-            position: absolute;
-            height: 8px;
-            background: #78350f;
+        
+        .manga-image-placeholder {
+            width: 100%;
+            height: 180px;
+            border: 1px solid var(--ink);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--ink);
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.03) 10px,
+                rgba(0,0,0,0.03) 20px
+            );
+        }
+
+        /* Wisdom Button & Modal */
+        .wisdom-trigger-btn {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 0.75rem 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            align-self: flex-start;
+        }
+        
+        .wisdom-trigger-btn:hover {
+            background: var(--accent);
+            color: var(--paper);
+        }
+
+        .wisdom-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(12, 10, 9, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .wisdom-modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .wisdom-modal-content {
+            background: var(--paper);
+            border: 4px solid var(--accent);
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
             border-radius: 4px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: -1;
-            animation: wood-grow 1.5s ease-out forwards;
         }
 
-        /* Winding Scroll UI */
-        #master-scroll {
-            transition: transform 0.1s linear;
+        .wisdom-modal-overlay.active .wisdom-modal-content {
+            transform: scale(1);
         }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--ink);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            color: var(--accent);
+        }
+
+        /* Navigation & Timer */
+        .manga-nav {
+            height: 70px;
+            border-top: 1px solid var(--muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            position: relative;
+        }
+
+        .nav-btn {
+            color: var(--ink);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-btn:hover:not(:disabled) {
+            color: var(--accent);
+        }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .timer-track {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: rgba(0,0,0,0.1);
+            width: 100%;
+        }
+        
+        .timer-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            /* The transition duration will be handled via JS to ensure it resets cleanly */
+        }
+
+        /* Custom Ninja Auto-Turn Animation Elements */
+        #ninja-animator {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%) translateX(100vw);
+            font-size: 6rem;
+            color: var(--ink);
+            z-index: 9999;
+            pointer-events: none;
+            text-shadow: -10px 0 20px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: -20px;
+        }
+
+        /* The animation timeline:
+           Ninja dashes from Right to Left. 
+           Page flip occurs in sync with the ninja crossing the screen. 
+        */
+        .run-ninja-dash {
+            animation: ninja-dash 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        .run-page-flip {
+            animation: page-flip 1.2s ease-in-out forwards;
+        }
+
+        @keyframes ninja-dash {
+            0% { transform: translateY(-50%) translateX(100vw) scaleX(-1); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translateY(-50%) translateX(-50vw) scaleX(-1); opacity: 1; }
+        }
+
+        @keyframes page-flip {
+            0% { transform: rotateY(0deg); opacity: 1; }
+            40% { transform: rotateY(-90deg); opacity: 0; }
+            60% { transform: rotateY(90deg); opacity: 0; }
+            100% { transform: rotateY(0deg); opacity: 1; }
+        }
+
+        /* Scrollbar */
+        .manga-content::-webkit-scrollbar { width: 6px; }
+        .manga-content::-webkit-scrollbar-track { background: transparent; }
+        .manga-content::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 3px; }
     </style>
 </head>
-<body class="antialiased relative">
+<body>
 
-    <div class="fixed top-24 right-4 md:right-8 z-50 flex flex-col items-center drop-shadow-[0_0_10px_rgba(255,123,0,0.8)] pointer-events-none transition-opacity duration-300 opacity-80 hover:opacity-100">
-        <i id="master-scroll" class="fa-solid fa-scroll text-5xl text-naranja"></i>
-        <span class="text-[10px] font-ninja text-naranja mt-2 bg-slate-900/90 px-2 py-1 rounded border border-naranja/30 shadow-lg tracking-widest uppercase">Winding Scroll</span>
+    <div id="intro-screen">
+        <video id="intro-video" autoplay muted playsinline onended="startJourney()">
+            <source src="Take_the_above_story_My_Shino.mp4" type="video/mp4">
+            Your browser does not support HTML video.
+        </video>
+        <button class="skip-btn" onclick="startJourney()">Enter the Archives</button>
     </div>
 
-    <!-- Hero Section -->
-    <header class="relative w-full min-h-[60vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden border-b-4 border-naranja bg-slate-900">
-        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30"></div>
-        
-        <div class="relative z-10">
-            <i class="fa-solid fa-fire text-6xl text-naranja mb-6 drop-shadow-[0_0_15px_rgba(255,123,0,1)]"></i>
-            <h1 class="font-ninja text-5xl md:text-7xl text-naranja mb-4 tracking-wider drop-shadow-lg">
-                MY SHINOBI WAY
-            </h1>
-            <h2 class="text-2xl md:text-3xl text-gray-300 font-light mb-8 max-w-2xl mx-auto">
-                A Cyber Security Career Journey from Academy Student to <span class="text-naranja font-bold">AVP (Legendary Sannin)</span>
-            </h2>
-            <p class="text-gray-400 max-w-xl mx-auto text-lg mb-10 italic">
-                "I'm not gonna run away, I never go back on my word! That's my nindo: my ninja way!"
-            </p>
-            <a href="#journey" class="px-8 py-3 bg-gradient-to-r from-naranja to-kyubi text-white font-bold rounded-full uppercase tracking-widest hover:shadow-[0_0_20px_rgba(255,123,0,0.6)] transition-all">
-                Unroll the Scroll
-            </a>
-        </div>
-    </header>
-
-    <!-- Timeline Section -->
-    <main id="journey" class="container mx-auto px-4 py-16 relative max-w-6xl">
-        
-        <!-- Dynamic Timeline Lines -->
-        <div class="timeline-track"></div>
-        <div class="timeline-fill" id="timeline-fill">
-            <div id="naruto-avatar" class="absolute bottom-[-15px] left-1/2 transform -translate-x-1/2 text-2xl text-naranja drop-shadow-[0_0_12px_rgba(255,123,0,1)] z-30 transition-transform duration-200">
-                <i class="fa-solid fa-user-ninja"></i>
-            </div>
-        </div>
-
-        <!-- ARC 1 HEADER -->
-        <div class="relative z-10 text-center mb-16 jutsu-card scroll-item">
-            <span class="bg-orange-900 text-orange-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-naranja shadow-[0_0_10px_rgba(255,123,0,0.5)]">
-                Part I: The Genin Trials
-            </span>
-            <h2 class="font-ninja text-3xl md:text-4xl text-naranja mt-4 drop-shadow-md">Ages 20 - 25</h2>
-            <p class="text-gray-400 mt-2">The Academy days, early rejections, and forging the first squad.</p>
-        </div>
-
-        <!-- Event 1: Academy -->
-        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between scroll-item">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
-                <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">The Academy Trials</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">MCA AT AURORA'S P.G. COLLEGE</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    Enrolling in the MCA program was my entry into the Ninja Academy. Like many Genin aiming for greatness, my early attempts to secure missions (internships) were met with silence and rejection. Yet, the Will of Fire was kindled, and my resolve remained unshaken.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-naranja shadow-[0_0_10px_rgba(255,123,0,0.8)]">
-                <i class="fa-solid fa-graduation-cap text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
-        </div>
-
-        <!-- Event 2: CDAC -->
-        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-12 items-center justify-between scroll-item" data-jutsu="fireball">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
-                <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">The First S-Rank Jutsu</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">CDAC SEMINAR BREAKTHROUGH</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    A pivotal Cyber Security seminar became my Chunin Exams. Encouraged by my mentor, Professor Ismail Mohammed, I demonstrated a custom jutsu—a credential-harvesting script targeting Facebook. This display of offensive chakra caught the eye of a CDAC Jonin, landing me my first mission: engineering a secure website fortified with strict defense policies.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-naranja shadow-[0_0_10px_rgba(255,123,0,0.8)]">
-                <i class="fa-solid fa-code text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pr-8"></div>
-        </div>
-
-        <!-- Event 3: ECIL -->
-        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between scroll-item" data-jutsu="shield">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
-                <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">Mastering Defensive Ninjutsu</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">ECIL APPRENTICESHIP</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    Despite the CDAC success, the path remained harsh. After relentless persistence, I secured an apprenticeship at ECIL. Here, I pivoted entirely to defensive ninjutsu. I dedicated myself to fortifying the village, instrumental in deploying their internal SIEM platform. My strategic case studies laid the groundwork for their future defense matrix.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-naranja shadow-[0_0_10px_rgba(255,123,0,0.8)]">
-                <i class="fa-solid fa-shield-halved text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
-        </div>
-
-        <!-- Event 4: DRDO -->
-        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-16 items-center justify-between scroll-item">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
-                <h3 class="text-xl font-bold text-naranja font-ninja tracking-wide">The Three-Man Squad</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">DRDO INTERNSHIP</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    Word of my skills reached the elite defense organization, DRDO, who required specialized shinobi for web and network security. Embracing leadership, I formed a classic three-man Genin squad with two trusted academy peers—one shinobi and one kunoichi. We faced a grueling gauntlet of interviews, ultimately securing a 6-month mission that forged our skills and culminated in my successful academy graduation.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-naranja shadow-[0_0_10px_rgba(255,123,0,0.8)]">
-                <i class="fa-solid fa-users text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pr-8"></div>
-        </div>
-
-        <!-- ARC 2 HEADER -->
-        <div class="relative z-10 text-center mb-16 pt-10 jutsu-card scroll-item">
-            <span class="bg-red-900 text-red-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest border border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]">
-                Part II: Shippuden - The Kage Era
-            </span>
-            <h2 class="font-ninja text-3xl md:text-4xl text-kyubi mt-4 kyubi-glow">Ages 25 - 30+</h2>
-            <p class="text-gray-400 mt-2">Entering the corporate battlefield, unlocking Sage Mode, and earning the title of Sannin.</p>
-        </div>
-
-        <!-- Event 5: Null Chapter -->
-        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between scroll-item">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
-                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">The Wandering Ronin</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">NULL HYDERABAD CHAPTER</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    Graduation brought a harsh winter. Facing continuous rejections in the job market, I wandered like a ronin, but my Will of Fire burned bright. I sought out the Null Hyderabad Chapter—a hidden village of elite security practitioners. This alliance expanded my network, honed my skills, and unlocked a vital recommendation for my first true corporate battlefront.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
-                <i class="fa-solid fa-network-wired text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
-        </div>
-
-        <!-- Event 6: Anthelio -->
-        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-12 items-center justify-between scroll-item">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
-                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">Entering the Battlefield</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">ANTHELIO SOLUTIONS (JUL 2016)</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    Joining Anthelio as an Information Security Associate, I was thrust onto the frontlines. Through sheer grit and tactical acumen, I advanced to Security Assistant. Tasked with first-level Incident Response, I relentlessly refined our defensive maneuvers, proving my worth and earning a swift promotion to a dedicated Incident Response Shinobi.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
-                <i class="fa-solid fa-khanda text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pr-8"></div>
-        </div>
-
-        <!-- Event 7: Synchrony JSOC -->
-        <div class="relative z-10 flex flex-col md:flex-row w-full mb-12 items-center justify-between scroll-item" data-jutsu="sage">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
-                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">Unlocking Sage Mode</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">SYNCHRONY JSOC (MAY 2018)</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    Seeking stronger adversaries, I joined Synchrony's JSOC. As an Analyst, I realized that to truly master the battlefield, one must dictate the rules of engagement. Demonstrating my knack for security engineering, I was drafted into the elite Security Engineering division within six months, weaving complex Python scripts to forge advanced security content.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
-                <i class="fa-brands fa-python text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
-        </div>
-
-        <!-- Event 8: Engineering & SOAR -->
-        <div class="relative z-10 flex flex-col md:flex-row-reverse w-full mb-12 items-center justify-between scroll-item">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-left pr-0 md:pl-8">
-                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">The Ultimate Defense</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">DEEP PACKET INSPECTION & CORTEX XSOAR</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    For eight grueling months, I perfected my sensory jutsu—developing Intrusion Detection rules, SIEM correlations, and CEF parsers for deep packet inspection. Recognizing the need for automated defense, I led the validation and deployment of the Palo Alto Cortex XSOAR platform, successfully launching it into our village's arsenal in May 2019.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
-                <i class="fa-solid fa-eye text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pr-8"></div>
-        </div>
-
-        <!-- Event 9: Automation -->
-        <div class="relative z-10 flex flex-col md:flex-row w-full mb-16 items-center justify-between scroll-item" data-jutsu="clones">
-            <div class="md:w-5/12 w-full mb-6 md:mb-0 pl-12 md:pl-0 md:text-right pr-0 md:pr-8">
-                <h3 class="text-xl font-bold text-kyubi font-ninja tracking-wide">The Shadow Clone Jutsu</h3>
-                <span class="text-sm text-gray-500 font-bold tracking-wider">AUTOMATION & PLAYBOOKS</span>
-                <p class="text-gray-400 mt-3 text-sm leading-relaxed">
-                    Mastering the XSOAR platform, I developed highly complex playbooks. By engineering auto-containment, rapid remediation, and compliance enforcement scripts, I effectively cloned our team's efforts. This masterstroke reduced the JSOC's manual workload by a staggering 35%—a true Shadow Clone Jutsu for enterprise security operations.
-                </p>
-            </div>
-            <div class="absolute left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-slate-800 border-4 border-kyubi shadow-[0_0_10px_rgba(255,42,0,0.8)]">
-                <i class="fa-solid fa-robot text-white text-sm"></i>
-            </div>
-            <div class="md:w-5/12 w-full pl-12 md:pl-8"></div>
-        </div>
-
-        <!-- Event 10 - The Climax -->
-        <div class="relative z-10 flex w-full mb-10 justify-center jutsu-card mt-10 scroll-item" data-jutsu="wood">
-            <div class="md:w-8/12 w-[calc(100%-20px)] bg-gradient-to-br from-slate-800 to-slate-900 border-2 border-naranja p-8 rounded-xl relative overflow-hidden group shadow-[0_0_30px_rgba(255,123,0,0.4)] text-center ml-[24px] md:ml-0">
-                <!-- Decorative Top Scroll Elements -->
-                <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-naranja to-kyubi"></div>
-                
-                <h2 class="font-ninja text-3xl md:text-5xl text-naranja mb-2 mt-2 drop-shadow-[0_0_8px_rgba(255,123,0,0.8)]">
-                    Wood Style: True Thousand Hands
-                </h2>
-                <h3 class="text-xl text-white font-bold mb-6 tracking-widest uppercase">
-                    Rank Achieved: Assistant Vice President (Legendary Sannin)
-                </h3>
-                
-                <p class="text-gray-300 text-lg leading-relaxed max-w-2xl mx-auto mb-6">
-                    Over the years, promoting every ~2 years, my leadership chakra grew. I was given the opportunity to build my own Anbu squad. Today, I operate as a <strong>Sannin</strong>, an Assistant Vice President handling both the technical frontlines and managerial strategies, leading a specialized elite team of <strong>7 FTEs</strong>. 
-                </p>
-
-                <!-- Future Goal Section -->
-                <div class="mt-8 pt-6 border-t border-slate-700/50">
-                    <h4 class="font-ninja text-2xl text-kyubi mb-2 kyubi-glow">The Next Transformation</h4>
-                    <p class="text-gray-400 text-md max-w-xl mx-auto">
-                        My journey doesn't end here. With the village secured and my squad trained, my eyes are set on the highest seat in the village: becoming the <strong>Hokage (CISO)</strong>.
-                    </p>
-                </div>
-
-                <p class="text-naranja font-bold text-xl italic font-ninja mt-6">
-                    "This is my Ninja Way."
-                </p>
-
-                <!-- 7 Man Squad Icons -->
-                <div class="flex justify-center items-center space-x-2 mt-6">
-                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
-                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
-                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
-                    <i class="fa-solid fa-dragon text-naranja text-3xl mx-2 shadow-naranja drop-shadow-[0_0_5px_rgba(255,123,0,1)] hover:scale-125 transition-transform cursor-pointer" title="The Sannin"></i>
-                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
-                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
-                    <i class="fa-solid fa-user-ninja text-gray-500"></i>
-                </div>
+    <div class="manga-wrapper" id="manga-wrapper">
+        <div class="manga-book">
+            <div class="manga-content" id="manga-content">
+                <!-- Content injected via JS -->
             </div>
             
-            <div class="absolute top-[-20px] left-[24px] md:left-1/2 transform -translate-x-1/2 flex items-center justify-center w-14 h-14 rounded-full bg-slate-900 border-4 border-naranja shadow-[0_0_20px_rgba(255,123,0,1)] z-20">
-                <i class="fa-solid fa-scroll text-naranja text-xl"></i>
+            <div class="manga-nav">
+                <button id="prev-btn" class="nav-btn" onclick="goPrev()">
+                    <i class="fa-solid fa-arrow-left"></i> Previous Chapter
+                </button>
+                <div id="page-indicator" class="font-ninja text-muted tracking-widest"></div>
+                
+                <!-- The Next button is explicitly removed as requested -->
+                <div style="width: 150px;"></div> <!-- Spacer to keep layout balanced -->
+
+                <!-- 2-Minute Countdown Timer Bar -->
+                <div class="timer-track">
+                    <div id="timer-fill" class="timer-fill"></div>
+                </div>
             </div>
         </div>
+    </div>
 
-    </main>
+    <!-- The Ninja that auto-turns the page -->
+    <div id="ninja-animator">
+        <i class="fa-solid fa-user-ninja"></i>
+    </div>
 
-    <!-- Script for animations -->
+    <!-- Sannin's Wisdom Modal -->
+    <div id="wisdom-modal" class="wisdom-modal-overlay" onclick="closeWisdomModal()">
+        <div class="wisdom-modal-content" onclick="event.stopPropagation()">
+            <button class="close-modal-btn" onclick="closeWisdomModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="flex items-center gap-3 mb-4 text-accent">
+                <i class="fa-solid fa-scroll text-2xl"></i>
+                <h3 class="font-ninja text-xl tracking-wider uppercase">Sannin's Wisdom</h3>
+            </div>
+            <p id="wisdom-modal-text" class="text-lg text-ink italic leading-relaxed font-medium"></p>
+        </div>
+    </div>
+
     <script>
-        // Leaf falling animation
-        function createLeaf() {
-            const leaf = document.createElement('div');
-            leaf.classList.add('leaf');
-            leaf.style.left = Math.random() * 100 + 'vw';
-            leaf.style.animationDuration = Math.random() * 3 + 2 + 's';
-            leaf.style.opacity = Math.random() * 0.5 + 0.1;
-            document.body.appendChild(leaf);
+        const chapters = [
+            {
+                chapterName: "Chapter 1",
+                title: "The Genjutsu of Orkut",
+                icon: "fa-comment-slash",
+                content: `At the Age of 13, I was introduced to Orkut by my friends, registering with a simple Yahoo account. I started exploring chatrooms, figuring out internet usage and instant messaging. However, one day I faced sudden humiliation: a friend's mother was furious at me for sending inappropriate messages on Orkut. I denied it relentlessly—because I hadn't done it—but I also had no idea *who* did, or *how*. That invisible attack was my first real encounter with hacking, though I didn't know the term back then. I lost a friend that day, but the mystery of that infiltration took root in the back of my mind. It was my first glimpse into the hidden world of the internet.`,
+                wisdom: "Genin, never trust a network blindly. What seems like a friendly message can be a masked adversary. That early betrayal taught me that identifying the true source of an attack is the first rule of defense."
+            },
+            {
+                chapterName: "Chapter 2",
+                title: "The Path of the Cadet",
+                icon: "fa-person-military-rifle",
+                content: `Consciously pushing the Orkut incident aside, I found a new path at 19. I felt a burning duty to serve my country in the armed forces, so I joined the NCC (National Cadet Corps) in India. I trained hard and excelled as a cadet, pouring my soul into the discipline. But fate had a different plan: my eyesight disqualified me from making it into the actual armed forces. It was devastating news. Yet, through that heartbreak and soul-searching, I realized something vital: my physical eyes might have failed the military test, but my mind's eye was perfectly tuned for computers.`,
+                wisdom: "A true shinobi adapts to the battlefield. When one path is blocked, find another. The discipline I learned in the NCC became the exact foundation I needed for the rigorous world of Cyber Security."
+            },
+            {
+                chapterName: "Chapter 3",
+                title: "Forging the Tools",
+                icon: "fa-microchip",
+                content: `Before the NCC, I had wanted to test the waters with computers, so I joined the NIIT institute to study hardware. I learned the theory, but I couldn't afford a PC to practice on. To compensate, I fake-boasted to acquaintances that I owned a computer and fixed it myself using my NIIT certification. Believing me, they brought me their actual PC problems. Thanks to my knack for it, the solutions I provided were absolutely correct! But then someone asked me to diagnose their internet connectivity. Realizing my limits, I immediately enrolled in a Network Technician course and aced it. I had unknowingly forged myself into a complete Hardware and Network Technician.`,
+                wisdom: "Sometimes, Genin, you must project confidence before you have the tools, and let your skills catch up to your reputation. Understanding the very hardware and wires that carry our data is essential before you can protect them."
+            },
+            {
+                chapterName: "Chapter 4",
+                title: "Birth of the Ethical Hacker",
+                icon: "fa-user-secret",
+                content: `The NCC failure jogged my memories. I needed part-time work to enhance my network skills to join a respected organization, which led me to CCNA. My parents scraped together enough for an academy. I aced CCNA, but my hunger grew. A teacher noticed my drive and suggested three advanced paths: Windows Admin, Linux Admin, and Ethical Hacking. Hearing 'Ethical Hacking' instantly brought the Orkut incident rushing back. The Ethical Hacker in me was born that day. Unable to afford the fees, I begged to be a lab assistant in exchange for lessons. I failed countless times, crushed by guilt and self-doubt. Yet, within 12 months, I mastered the labs and passed the US Council EHCE exam. I even ventured into Bug Bounties, though my early findings were dismissed as trivial.`,
+                wisdom: "Failure is just another form of intelligence gathering. Those sleepless nights failing in the labs forged my resilience. A shinobi must know how to break a system in order to truly secure it."
+            },
+            {
+                chapterName: "Chapter 5",
+                title: "The Academy Days",
+                icon: "fa-school",
+                content: `Seeking a solid foundation, I joined Osmania University affiliated Aurora's P.G College for my MCA (Master of Computer Applications). I began showing off my technical skills, but my peers couldn't understand the depth of what I was doing. However, a true mentor appeared: Professor Ismail Mohammed. He saw the raw hacker within me and guided me to channel those skills ethically, teaching me how to mold my rogue chakra into structured, defensive strategies.`,
+                wisdom: "Even the most talented shinobi needs a Sensei. Professor Ismail taught me that raw skill without ethical guidance is dangerous. Always seek mentors who elevate your moral compass."
+            },
+            {
+                chapterName: "Chapter 6",
+                title: "The First Mission",
+                icon: "fa-shield-halved",
+                content: `Despite applying everywhere, I couldn't land a 2nd-year internship. Then came a Cyber Security seminar. Professor Ismail urged me to present my hands-on experience. I showcased a tool I developed that captured Facebook credentials via a simple link. A visiting professor from CDAC was blown away! I ended up developing a secure website for them. Still struggling for a permanent role, I eventually landed an apprenticeship at ECIL. I shifted to pure defense, helping them deploy their SIEM platform. Impressed, CDAC recommended me to DRDO (Defense Research and Development Organization). I assembled a 3-man squad (myself, a male friend, and a female friend) and successfully landed a 6-month internship at DRDO, capping off my post-graduation in triumph.`,
+                wisdom: "Notice how I formed a balanced 3-man squad for the DRDO mission? Teamwork is everything. And remember: offensive knowledge (the Facebook exploit) is what proves you know how to build a strong defense."
+            },
+            {
+                chapterName: "Chapter 7",
+                title: "Building the Allied Forces",
+                icon: "fa-network-wired",
+                content: `Post-graduation brought a dark cloud; rejections piled up everywhere I applied. But my inner fire never died. I joined the Null Hyderabad chapter, immersing myself in the local InfoSec community. I began giving presentations on both offensive attacks and defensive countermeasures, painting the larger picture of security. This drastically boosted my reputation and expanded my network. I wasn't just learning anymore; I was sharing chakra with the village.`,
+                wisdom: "Your network is your strongest village, Genin. When corporations close their doors, the community will open theirs. Sharing knowledge is the fastest way to master it yourself."
+            },
+            {
+                chapterName: "Chapter 8",
+                title: "The Frontlines",
+                icon: "fa-khanda",
+                content: `Through a connection in my network, I was recommended for a vacancy at Anthelio Solutions. In July 2016, I joined as an Information Security Associate. Though new to the corporate world, I was a veteran of attack and defense scenarios. I quickly recommended crucial improvements backed by hard evidence. Promoted to InfoSec Assistant, I took on Level 1 Incident Response. I honed my skills, authored critical IR playbooks, and introduced automation using Ansible, Chef, Puppet, and Python, earning another promotion as a full Incident Responder.`,
+                wisdom: "Never wait for orders when you see a vulnerability. Bring evidence, propose a solution, and automate the mundane. That is how a Genin becomes a Chunin on the battlefield."
+            },
+            {
+                chapterName: "Chapter 9",
+                title: "Unlocking Sage Mode",
+                icon: "fa-eye",
+                content: `It was time to grow wings. I switched to Synchrony in May 2018 as a JSOC Analyst. I aimed to overhaul their security operations. I realized that to improve investigations, we had to fundamentally enhance the security content that triggered the alerts. Showcasing my knack for deep engineering, within 6 months (Nov 2018), I was pulled into the elite Security Engineering department. My mission: build context-rich security content and write the Python code to make it execute flawlessly.`,
+                wisdom: "Responding to alerts is good, but engineering the alerts is Sage Mode. To defeat the enemy, you must understand the very fabric of the logic that detects them."
+            },
+            {
+                chapterName: "Chapter 10",
+                title: "Mastery of Automations",
+                icon: "fa-robot",
+                content: `I spent 8 glorious months forging Intrusion Detection Rules, SIEM logic, writing CEF parsers, and implementing deep packet inspection mechanisms. Recognizing my mastery, leadership asked me to validate and deploy a SOAR platform. After 3 months of intense labor, we successfully deployed Palo Alto Cortex XSOAR in May 2019. I had automated the village's defenses.`,
+                wisdom: "SOAR is the ultimate Shadow Clone Jutsu. Why fight a thousand threats with your own hands when you can script your clones to neutralize them in milliseconds?"
+            },
+            {
+                chapterName: "Chapter 11",
+                title: "The Legendary Sannin",
+                icon: "fa-dragon",
+                content: `From that point on, I built incredibly complex playbooks and automation scripts aimed at auto-containment and remediation. My work reduced the JSOC's manual workload by a massive 35%. Promoted consistently every 2 years, I earned the right to build my own Anbu squad. Today, I lead a team of 7 FTEs as an Assistant Vice President—balancing technical mastery with managerial strategy. The Sannin was born.`,
+                wisdom: "A Sannin doesn't just fight; they lead. My greatest Jutsu now isn't a script; it's the 7 brilliant shinobi on my team. Train your squad well, for they are the future of the village."
+            }
+        ];
 
+        let currentPage = 0;
+        let isAnimating = false;
+        let journeyStarted = false;
+        
+        // Timer Configuration (Reduced to 1 Minute)
+        const AUTO_TURN_MS = 60000; // 1 minute (60,000 milliseconds)
+        let autoTurnTimeout;
+
+        function startJourney() {
+            if(journeyStarted) return;
+            journeyStarted = true;
+            
+            const video = document.getElementById('intro-video');
+            video.pause();
+
+            const intro = document.getElementById('intro-screen');
+            intro.style.opacity = '0';
             setTimeout(() => {
-                leaf.remove();
-            }, 5000);
+                intro.style.display = 'none';
+                document.getElementById('manga-wrapper').style.display = 'flex';
+                renderPage();
+                startAutoTurnTimer();
+            }, 1000);
         }
 
-        setInterval(createLeaf, 300);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const observerOptions = {
-                root: null,
-                rootMargin: '0px 0px -15% 0px', // Triggers slightly before the item hits the bottom of the screen
-                threshold: 0.1
-            };
-
-            const scrollObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Unwind when scrolling down
-                        entry.target.classList.add('scrolled-in');
-                        
-                        const jutsuType = entry.target.getAttribute('data-jutsu');
-                        const iconContainer = entry.target.querySelector('.absolute.rounded-full');
-                        
-                        if (jutsuType && iconContainer && !iconContainer.classList.contains('jutsu-casted')) {
-                            iconContainer.classList.add('jutsu-casted'); // Prevent re-casting on every minor scroll bounce
-                            
-                            if (jutsuType === 'fireball') {
-                                iconContainer.classList.add('animate-fireball');
-                            } else if (jutsuType === 'shield') {
-                                iconContainer.classList.add('animate-shield');
-                            } else if (jutsuType === 'sage') {
-                                iconContainer.classList.add('animate-sage');
-                                entry.target.querySelector('i').classList.replace('text-white', 'text-green-400');
-                            } else if (jutsuType === 'clones') {
-                                // Add smoke puffs and clone icons
-                                for(let i=0; i<3; i++) {
-                                    const smoke = document.createElement('i');
-                                    smoke.className = 'fa-solid fa-cloud clone-smoke';
-                                    smoke.style.left = (Math.random() * 60 - 30) + 'px';
-                                    smoke.style.top = (Math.random() * 60 - 30) + 'px';
-                                    iconContainer.appendChild(smoke);
-                                    
-                                    setTimeout(() => {
-                                        const clone = document.createElement('i');
-                                        clone.className = 'fa-solid fa-robot text-naranja absolute';
-                                        clone.style.left = (Math.random() * 80 - 40) + 'px';
-                                        clone.style.top = (Math.random() * 80 - 40) + 'px';
-                                        clone.style.opacity = '0.6';
-                                        clone.style.fontSize = '0.8rem';
-                                        iconContainer.appendChild(clone);
-                                    }, 400);
-                                }
-                            } else if (jutsuType === 'wood') {
-                                const card = entry.target.querySelector('.bg-gradient-to-br');
-                                // Spawn wood branches
-                                for(let i=0; i<6; i++) {
-                                    const branch = document.createElement('div');
-                                    branch.className = 'wood-branch';
-                                    branch.style.top = (20 + (i * 15)) + '%';
-                                    if(i % 2 === 0) {
-                                        branch.style.left = '-50px';
-                                        branch.style.transformOrigin = 'left center';
-                                    } else {
-                                        branch.style.right = '-50px';
-                                        branch.style.transformOrigin = 'right center';
-                                        branch.style.transform = 'translateY(-50%) rotate(180deg)';
-                                    }
-                                    card.appendChild(branch);
-                                }
-                            }
-                        }
-                    } else {
-                        // Wind up when scrolling up/out of view
-                        entry.target.classList.remove('scrolled-in');
-                        
-                        const iconContainer = entry.target.querySelector('.absolute.rounded-full');
-                        if(iconContainer && entry.boundingClientRect.top > 0) {
-                            iconContainer.classList.remove('jutsu-casted', 'animate-fireball', 'animate-shield', 'animate-sage');
-                            if (entry.target.getAttribute('data-jutsu') === 'sage') {
-                                entry.target.querySelector('i').classList.replace('text-green-400', 'text-white');
-                            }
-                            const clones = iconContainer.querySelectorAll('.fa-robot.absolute, .clone-smoke');
-                            clones.forEach(c => c.remove());
-                            const card = entry.target.querySelector('.bg-gradient-to-br');
-                            if(card) {
-                                const branches = card.querySelectorAll('.wood-branch');
-                                branches.forEach(b => b.remove());
-                            }
-                        }
-                    }
-                });
-            }, observerOptions);
-
-            const scrollItems = document.querySelectorAll('.scroll-item');
-            scrollItems.forEach(item => scrollObserver.observe(item));
-
-            const timelineFill = document.getElementById('timeline-fill');
-            const mainSection = document.getElementById('journey');
-            const masterScroll = document.getElementById('master-scroll');
-            const narutoAvatar = document.getElementById('naruto-avatar');
-            let lastScrollTop = 0;
-
-            window.addEventListener('scroll', () => {
-                const rect = mainSection.getBoundingClientRect();
-                const viewportHeight = window.innerHeight;
+        function renderPage() {
+            const data = chapters[currentPage];
+            const contentDiv = document.getElementById('manga-content');
+            
+            let html = `
+                <div class="chapter-header flex justify-between items-end">
+                    <div>
+                        <span class="font-ninja text-accent tracking-widest text-sm">${data.chapterName}</span>
+                        <h2 class="text-3xl font-bold mt-1">${data.title}</h2>
+                    </div>
+                </div>
                 
-                // Calculate how much of the main container we have scrolled past
-                // We want the line to start pouring from the middle of the screen
-                const scrollStart = viewportHeight / 2; 
-                const scrolledDistance = scrollStart - rect.top;
-                const totalScrollableDistance = rect.height;
+                <div class="manga-image-placeholder">
+                    <i class="fa-solid ${data.icon}"></i>
+                </div>
 
-                let progressPercentage = (scrolledDistance / totalScrollableDistance) * 100;
-                
-                // Clamp the value between 0 and 100
-                progressPercentage = Math.max(0, Math.min(100, progressPercentage));
-                
-                timelineFill.style.height = `${progressPercentage}%`;
-                
-                const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                
-                // Rotate the main scroll icon at the top right
-                masterScroll.style.transform = `rotate(${currentScrollTop * 0.15}deg)`;
-                
-                // Make Naruto flip directions if scrolling up vs down on the timeline
-                if (currentScrollTop > lastScrollTop) {
-                    // Scrolling Down (Diving into the scroll)
-                    narutoAvatar.style.transform = 'translateX(-50%) rotate(180deg)';
-                } else {
-                    // Scrolling Up (Retreating)
-                    narutoAvatar.style.transform = 'translateX(-50%) rotate(0deg)';
-                }
-                lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
-            });
-        });
+                <div class="text-lg leading-relaxed font-medium mb-10 text-justify">
+                    ${data.content}
+                </div>
+
+                <button class="wisdom-trigger-btn" onclick="openWisdomModal()">
+                    <i class="fa-solid fa-scroll"></i> Read Sannin's Wisdom
+                </button>
+            `;
+            
+            contentDiv.innerHTML = html;
+            contentDiv.scrollTop = 0;
+            
+            document.getElementById('page-indicator').textContent = `Scroll ${currentPage + 1} of ${chapters.length}`;
+            document.getElementById('prev-btn').disabled = currentPage === 0;
+        }
+
+        // --- Timer & Auto-Turn Logic ---
+        
+        function startAutoTurnTimer() {
+            clearTimeout(autoTurnTimeout);
+            
+            // Only start the timer if we are not on the last page
+            if (currentPage >= chapters.length - 1) {
+                document.getElementById('timer-fill').style.width = '100%';
+                document.getElementById('timer-fill').style.transition = 'none';
+                return;
+            }
+
+            // Reset CSS animation for the progress bar
+            const timerFill = document.getElementById('timer-fill');
+            timerFill.style.transition = 'none';
+            timerFill.style.width = '0%';
+            
+            // Force a browser reflow so the '0%' state applies instantly before animating
+            void timerFill.offsetWidth; 
+            
+            // Animate bar filling over 120 seconds
+            timerFill.style.transition = `width ${AUTO_TURN_MS}ms linear`;
+            timerFill.style.width = '100%';
+
+            // Schedule the page turn
+            autoTurnTimeout = setTimeout(() => {
+                triggerAutoTurn();
+            }, AUTO_TURN_MS);
+        }
+
+        // --- Wisdom Modal Logic ---
+        function openWisdomModal() {
+            const data = chapters[currentPage];
+            
+            // Note: Using innerText instead of innerHTML mitigates XSS if data were dynamic
+            document.getElementById('wisdom-modal-text').innerText = `"${data.wisdom}"`;
+            document.getElementById('wisdom-modal').classList.add('active');
+            
+            // Pause the auto-turn timer visually by locking its current width
+            clearTimeout(autoTurnTimeout);
+            const timerFill = document.getElementById('timer-fill');
+            const currentWidth = window.getComputedStyle(timerFill).width;
+            timerFill.style.transition = 'none';
+            timerFill.style.width = currentWidth;
+        }
+
+        function closeWisdomModal() {
+            document.getElementById('wisdom-modal').classList.remove('active');
+            
+            // Restart the 1-minute timer from scratch when they close the modal
+            startAutoTurnTimer();
+        }
+
+        function triggerAutoTurn() {
+            if (isAnimating || currentPage >= chapters.length - 1) return;
+            isAnimating = true;
+
+            const ninja = document.getElementById('ninja-animator');
+            const content = document.getElementById('manga-content');
+            
+            // Reset animation states
+            ninja.classList.remove('run-ninja-dash');
+            content.classList.remove('run-page-flip');
+            void ninja.offsetWidth;
+            void content.offsetWidth;
+            
+            // Trigger animations
+            ninja.classList.add('run-ninja-dash');
+            content.classList.add('run-page-flip');
+
+            // Wait for half the flip animation (when opacity is 0) to swap the content
+            setTimeout(() => {
+                currentPage++;
+                renderPage();
+            }, 600); 
+
+            // Cleanup classes when animation finishes
+            setTimeout(() => {
+                ninja.classList.remove('run-ninja-dash');
+                content.classList.remove('run-page-flip');
+                isAnimating = false;
+                startAutoTurnTimer(); // Restart timer for the next page
+            }, 1200); 
+        }
+
+        function goPrev() {
+            if (isAnimating || currentPage === 0) return;
+            isAnimating = true;
+            
+            const content = document.getElementById('manga-content');
+            content.classList.remove('run-page-flip');
+            void content.offsetWidth;
+            content.classList.add('run-page-flip');
+
+            setTimeout(() => {
+                currentPage--;
+                renderPage();
+            }, 600);
+
+            setTimeout(() => {
+                content.classList.remove('run-page-flip');
+                isAnimating = false;
+                startAutoTurnTimer(); // Restart the 2 min timer since user interacted
+            }, 1200);
+        }
+
     </script>
 </body>
 </html>
